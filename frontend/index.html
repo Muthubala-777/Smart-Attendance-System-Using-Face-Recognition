@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Autonomous Smart Attendance System using Multi-Face Recognition, ArcFace Deep Embeddings, and Automatic Timetable-Based Session Management.">
+  <title>Smart Attendance System | AI Multi-Face Recognition</title>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Main App Shell -->
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-badge">👁️</div>
+        <div class="brand-text">
+          <h1>VisionAttend</h1>
+          <p>AI Timetable Biometrics</p>
+        </div>
+      </div>
+
+      <nav class="nav-section">
+        <!-- Student Views -->
+        <div class="nav-category nav-student" data-role="student">Student Portal</div>
+        <div class="nav-item nav-student" data-view="view-student-dashboard" data-role="student">
+          <span class="icon">🎓</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item nav-student" id="navStudentStartCamera" data-view="view-student-dashboard" data-role="student">
+          <span class="icon">📹</span>
+          <span>Start Attendance</span>
+        </div>
+        <div class="nav-item nav-student" data-view="view-student-history" data-role="student">
+          <span class="icon">📋</span>
+          <span>My Attendance</span>
+        </div>
+        <div class="nav-item nav-student" id="navStudentProfile" data-view="view-student-profile" data-role="student">
+          <span class="icon">👤</span>
+          <span>My Profile</span>
+        </div>
+
+        <!-- Staff Views -->
+        <div class="nav-category nav-staff" data-role="staff">Faculty Portal</div>
+        <div class="nav-item nav-staff" data-view="view-staff-dashboard" data-role="staff">
+          <span class="icon">👨‍🏫</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item nav-staff" data-view="view-live" data-role="staff">
+          <span class="icon">📹</span>
+          <span>Live Attendance</span>
+        </div>
+        <div class="nav-item nav-staff" data-view="view-students" data-role="staff">
+          <span class="icon">👥</span>
+          <span>Students</span>
+        </div>
+        <div class="nav-item nav-staff" id="navStaffAddStudent" data-view="view-enroll" data-role="staff">
+          <span class="icon">👤➕</span>
+          <span>Add Student</span>
+        </div>
+        <div class="nav-item nav-staff" data-view="view-history" data-role="staff">
+          <span class="icon">📋</span>
+          <span>Attendance History</span>
+        </div>
+        <div class="nav-item nav-staff" data-view="view-reports" data-role="staff">
+          <span class="icon">📥</span>
+          <span>Reports</span>
+        </div>
+        <div class="nav-item nav-staff" id="navStaffProfile" data-view="view-staff-dashboard" data-role="staff">
+          <span class="icon">👤</span>
+          <span>Profile</span>
+        </div>
+
+        <!-- Admin Views -->
+        <div class="nav-category nav-admin" data-role="admin">Administration</div>
+        <div class="nav-item active nav-admin" data-view="view-dashboard" data-role="admin">
+          <span class="icon">📊</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-live" data-role="admin">
+          <span class="icon">📹</span>
+          <span>Live Attendance</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-students" data-role="admin">
+          <span class="icon">👥</span>
+          <span>Students</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-enroll" data-role="admin">
+          <span class="icon">👤➕</span>
+          <span>Add Student</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-timetable" data-role="admin">
+          <span class="icon">📅</span>
+          <span>Timetable</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-subjects" data-role="admin">
+          <span class="icon">📚</span>
+          <span>Subjects & Faculty</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-history" data-role="admin">
+          <span class="icon">📋</span>
+          <span>Attendance History</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-reports" data-role="admin">
+          <span class="icon">📥</span>
+          <span>Reports</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-benchmark" data-role="admin">
+          <span class="icon">🔬</span>
+          <span>Academic Evaluation</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-settings" data-role="admin">
+          <span class="icon">⚙️</span>
+          <span>System Settings</span>
+        </div>
+        <div class="nav-item nav-admin" data-view="view-audit" data-role="admin">
+          <span class="icon">🛡️</span>
+          <span>Audit Logs</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" id="adminAvatar">A</div>
+          <div class="user-info">
+            <div class="user-name" id="adminNameDisplay">Administrator</div>
+            <div class="user-role" id="adminRoleDisplay">Superadmin</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="btnLogout" title="Logout">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Top Navigation Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="page-title" id="pageTitleText">Live Dashboard</div>
+          <div class="timetable-indicator" id="timetableStatusIndicator">
+            <span class="status-dot"></span>
+            <span id="timetableStatusText">Checking Timetable...</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="clock-display" id="liveClockDisplay">Loading clock...</div>
+        </div>
+      </header>
+
+      <!-- Dynamic Views Container -->
+      <div class="page-container">
+
+        <!-- ========================================== -->
+        <!-- VIEW: STUDENT DASHBOARD                    -->
+        <!-- ========================================== -->
+        <section id="view-student-dashboard" class="view-section">
+          <!-- Student Greeting Banner -->
+          <div class="active-session-banner student-banner">
+            <div class="banner-left">
+              <div class="banner-badge">🎓</div>
+              <div class="banner-info">
+                <h3 id="studentWelcomeName">Welcome, Student</h3>
+                <div class="banner-meta">
+                  <span id="studentRollBadge">Roll No: Loading...</span>
+                  <span id="studentDeptBadge">Department: Loading...</span>
+                  <span id="studentClassBadge">Class: Loading...</span>
+                </div>
+              </div>
+            </div>
+            <!-- Live Clock in Student Banner -->
+            <div class="live-clock-card" id="studentLiveClockCard">
+              <div class="clock-label">CURRENT ACADEMIC TIME</div>
+              <div class="clock-value live-clock-text" id="studentClockVal">Loading clock...</div>
+              <div class="clock-sub"><span class="pulse-dot"></span> Authoritative Server Clock</div>
+            </div>
+            <div class="banner-right-action">
+              <button class="btn btn-primary" id="btnScrollToCamera">Go to Camera 📹</button>
+            </div>
+          </div>
+
+          <!-- Student Profile & Stats Grid -->
+          <div class="student-overview-grid">
+            <!-- Student Profile Card (A) -->
+            <div class="panel-card student-profile-card">
+              <div class="panel-header">
+                <h3>Biometric Profile</h3>
+                <span class="badge badge-success" id="studentStatusBadge">Enrolled & Active</span>
+              </div>
+              <div class="student-profile-body">
+                <div class="student-photo-wrapper">
+                  <img id="studentPhotoImg" src="/api/students/none/photo" alt="Reference Face" class="student-ref-photo">
+                  <div class="photo-caption">Enrolled Biometric Photo</div>
+                </div>
+                <div class="student-details-list">
+                  <div class="detail-row"><span class="lbl">Full Name:</span> <span class="val font-bold" id="profileStudentName">--</span></div>
+                  <div class="detail-row"><span class="lbl">Roll Number:</span> <span class="val font-mono" id="profileStudentRoll">--</span></div>
+                  <div class="detail-row"><span class="lbl">Department:</span> <span class="val" id="profileStudentDept">--</span></div>
+                  <div class="detail-row"><span class="lbl">Year & Section:</span> <span class="val" id="profileStudentYrSec">--</span></div>
+                  <div class="detail-row"><span class="lbl">Academic Year:</span> <span class="val" id="profileStudentAcdYr">--</span></div>
+                  <div class="detail-row"><span class="lbl">Attendance Rate:</span> <span class="val text-success font-bold" id="profileStudentPct">--%</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Attendance Summary Stats (B) -->
+            <div class="panel-card student-stats-card">
+              <div class="panel-header">
+                <h3>Attendance Summary</h3>
+                <span class="badge badge-primary">Institutional Record</span>
+              </div>
+              <div class="stats-grid-2x2">
+                <div class="stat-mini-card">
+                  <div class="stat-mini-icon primary">📚</div>
+                  <div class="stat-mini-val" id="stuStatTotal">0</div>
+                  <div class="stat-mini-lbl">Total Classes</div>
+                </div>
+                <div class="stat-mini-card">
+                  <div class="stat-mini-icon success">✅</div>
+                  <div class="stat-mini-val text-success" id="stuStatPresent">0</div>
+                  <div class="stat-mini-lbl">Present</div>
+                </div>
+                <div class="stat-mini-card">
+                  <div class="stat-mini-icon danger">❌</div>
+                  <div class="stat-mini-val text-danger" id="stuStatAbsent">0</div>
+                  <div class="stat-mini-lbl">Absent</div>
+                </div>
+                <div class="stat-mini-card">
+                  <div class="stat-mini-icon warning">⏱️</div>
+                  <div class="stat-mini-val text-warning" id="stuStatLate">0</div>
+                  <div class="stat-mini-lbl">Late</div>
+                </div>
+              </div>
+              <!-- Attendance Percentage Bar -->
+              <div class="attendance-progress-container">
+                <div class="progress-labels">
+                  <span>Attendance Percentage</span>
+                  <span id="stuProgressPct" class="font-bold text-success">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" id="stuProgressBar" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Camera Section (C & D: START CAMERA BUTTON & MULTI-STUDENT RECOGNITION) -->
+          <div class="panel-card student-camera-card" id="studentCameraSection">
+            <div class="panel-header">
+              <div>
+                <h3>Student Camera Attendance</h3>
+                <p class="panel-subtitle">Align face directly with camera. Multiple students can be verified simultaneously.</p>
+              </div>
+              <div class="camera-controls">
+                <span class="badge badge-secondary" id="studentFaceCountBadge">Detected Faces: 0</span>
+                <span class="badge badge-info" id="studentFpsBadge">FPS: 0</span>
+                <button class="btn btn-primary" id="btnStudentStartCamera">START CAMERA 📹</button>
+                <button class="btn btn-danger" id="btnStudentStopCamera" style="display: none;">STOP CAMERA ⏹️</button>
+              </div>
+            </div>
+
+            <div class="camera-workspace-split">
+              <!-- Live Camera Viewport -->
+              <div class="camera-viewport-card">
+                <div class="camera-viewport-container">
+                  <video id="studentWebcamVideo" autoplay playsinline muted></video>
+                  <canvas id="studentCameraOverlay"></canvas>
+                  <div class="camera-standby-overlay" id="studentCameraStandby">
+                    <div class="standby-icon">📷</div>
+                    <div class="standby-title">Camera Inactive</div>
+                    <div class="standby-desc">Click "START CAMERA" to begin biometric verification</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Real-Time Recognition Result Card -->
+              <div class="recognition-result-panel">
+                <h4 class="result-panel-heading">Verification Result</h4>
+                <div class="result-status-card" id="studentResultCard">
+                  <div class="result-placeholder">
+                    <div class="result-icon-ph">👁️</div>
+                    <div class="result-text-ph">Awaiting face recognition...</div>
+                  </div>
+                </div>
+
+                <!-- Active Session Information -->
+                <div class="active-session-mini-card">
+                  <div class="mini-card-header">Current Timetable Slot</div>
+                  <div class="mini-card-row"><span class="lbl">Subject:</span> <span class="val font-bold" id="stuActiveSubject">Checking...</span></div>
+                  <div class="mini-card-row"><span class="lbl">Time:</span> <span class="val" id="stuActiveTime">--</span></div>
+                  <div class="mini-card-row"><span class="lbl">Room:</span> <span class="val" id="stuActiveRoom">--</span></div>
+                  <div class="mini-card-row"><span class="lbl">Faculty:</span> <span class="val" id="stuActiveFaculty">--</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Personal Attendance History -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3>My Recent Attendance Log</h3>
+              <button class="btn btn-sm btn-secondary" id="btnRefreshStudentHistory">Refresh 🔄</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time Slot</th>
+                    <th>Subject Code & Name</th>
+                    <th>Classroom</th>
+                    <th>Entry Timestamp</th>
+                    <th>Confidence</th>
+                    <th>Liveness</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="studentAttendanceTableBody">
+                  <tr><td colspan="8" class="text-center py-4">Loading your attendance records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: STUDENT ATTENDANCE HISTORY           -->
+        <!-- ========================================== -->
+        <section id="view-student-history" class="view-section">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3>My Complete Attendance Record</h3>
+                <p class="panel-subtitle">Official verified attendance timestamps recorded by ArcFace recognition.</p>
+              </div>
+              <button class="btn btn-sm btn-secondary" id="btnRefreshStudentFullHistory">Refresh 🔄</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time Slot</th>
+                    <th>Subject</th>
+                    <th>Classroom</th>
+                    <th>Faculty</th>
+                    <th>Arrival Time</th>
+                    <th>Confidence</th>
+                    <th>Liveness</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="studentFullHistoryTableBody">
+                  <tr><td colspan="9" class="text-center py-4">Loading verified attendance ledger...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: STUDENT DEDICATED PROFILE            -->
+        <!-- ========================================== -->
+        <section id="view-student-profile" class="view-section">
+          <!-- Profile Header Banner -->
+          <div class="active-session-banner student-banner" style="margin-bottom: 24px;">
+            <div class="banner-left">
+              <div class="banner-badge">👤</div>
+              <div class="banner-info">
+                <h3 id="studentProfileHeaderName">Student Profile</h3>
+                <div class="banner-meta">
+                  <span id="studentProfileHeaderRoll">Roll: --</span>
+                  <span id="studentProfileHeaderDept">Department: --</span>
+                  <span class="badge badge-success" id="studentProfileActiveBadge">Enrolled & Verified</span>
+                </div>
+              </div>
+            </div>
+            <div class="banner-right-action" style="display: flex; gap: 10px;">
+              <button class="btn btn-primary" id="btnProfileGoToCamera">Start Facial Attendance 📹</button>
+              <button class="btn btn-outline" id="btnProfileGoToHistory">My Attendance Ledger 📋</button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start;">
+            <!-- Left Card: Biometric Portrait & ID Details -->
+            <div class="panel-card" style="text-align: center;">
+              <div style="position: relative; display: inline-block; margin-bottom: 16px;">
+                <img id="profilePagePhoto" src="/api/students/none/photo" alt="Student Biometric Photo" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 0 25px var(--primary-glow); background: #1e293b;">
+                <span class="badge badge-success" style="position: absolute; bottom: 6px; right: 6px; font-size: 11px;">✓ AI Verified</span>
+              </div>
+              <h2 id="profilePageName" style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Student Name</h2>
+              <div class="font-mono" id="profilePageRoll" style="color: var(--accent-cyan); font-weight: 700; font-size: 14px; margin-bottom: 12px;">--</div>
+              <div class="badge badge-primary" id="profilePageDeptBadge" style="margin-bottom: 20px;">AI & Data Science</div>
+
+              <div class="student-details-list" style="text-align: left; background: rgba(0,0,0,0.25); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+                <div class="detail-row"><span class="lbl">Department:</span> <span class="val font-bold" id="profilePageDept">--</span></div>
+                <div class="detail-row"><span class="lbl">Class Year:</span> <span class="val" id="profilePageYear">--</span></div>
+                <div class="detail-row"><span class="lbl">Section:</span> <span class="val" id="profilePageSection">--</span></div>
+                <div class="detail-row"><span class="lbl">Academic Year:</span> <span class="val" id="profilePageAcdYear">--</span></div>
+                <div class="detail-row"><span class="lbl">Semester:</span> <span class="val" id="profilePageSemester">--</span></div>
+                <div class="detail-row"><span class="lbl">Email:</span> <span class="val font-mono" id="profilePageEmail">--</span></div>
+                <div class="detail-row"><span class="lbl">Phone:</span> <span class="val font-mono" id="profilePagePhone">--</span></div>
+              </div>
+            </div>
+
+            <!-- Right Column: Biometric Engine Stats & Attendance Performance -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <!-- Biometric Status Panel -->
+              <div class="panel-card">
+                <div class="panel-header">
+                  <div>
+                    <h3>Biometric Identification Specs</h3>
+                    <p class="panel-subtitle">Multi-angle facial embedding profile registered in institutional vector gallery.</p>
+                  </div>
+                  <span class="badge badge-success" id="profilePageBiometricStatus">ArcFace 512-D Synced</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 10px;">
+                  <div style="background: rgba(15,23,42,0.6); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Vision Model</div>
+                    <div style="font-weight: 700; color: #38bdf8; margin-top: 4px;">YuNet + ArcFace</div>
+                  </div>
+                  <div style="background: rgba(15,23,42,0.6); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Enrolled Angles</div>
+                    <div style="font-weight: 700; color: #34d399; margin-top: 4px;" id="profilePageSamplesCount">5 Calibration Samples</div>
+                  </div>
+                  <div style="background: rgba(15,23,42,0.6); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Liveness Security</div>
+                    <div style="font-weight: 700; color: #a78bfa; margin-top: 4px;">Temporal EAR + Texture</div>
+                  </div>
+                  <div style="background: rgba(15,23,42,0.6); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Alignment</div>
+                    <div style="font-weight: 700; color: #fbbf24; margin-top: 4px;">5-Pt Canonical Affine</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Attendance Analytics Panel -->
+              <div class="panel-card">
+                <div class="panel-header">
+                  <div>
+                    <h3>Cumulative Attendance Standing</h3>
+                    <p class="panel-subtitle">Official verified attendance statistics across all enrolled timetable slots.</p>
+                  </div>
+                </div>
+                <div class="stats-grid-2x2" style="margin-bottom: 18px;">
+                  <div class="stat-mini-card">
+                    <div class="stat-mini-icon primary">📚</div>
+                    <div class="stat-mini-val" id="profileStatTotal">0</div>
+                    <div class="stat-mini-lbl">Total Classes Scheduled</div>
+                  </div>
+                  <div class="stat-mini-card">
+                    <div class="stat-mini-icon success">✅</div>
+                    <div class="stat-mini-val text-success" id="profileStatPresent">0</div>
+                    <div class="stat-mini-lbl">Classes Attended (Present)</div>
+                  </div>
+                  <div class="stat-mini-card">
+                    <div class="stat-mini-icon danger">❌</div>
+                    <div class="stat-mini-val text-danger" id="profileStatAbsent">0</div>
+                    <div class="stat-mini-lbl">Classes Missed (Absent)</div>
+                  </div>
+                  <div class="stat-mini-card">
+                    <div class="stat-mini-icon warning">⏱️</div>
+                    <div class="stat-mini-val text-warning" id="profileStatLate">0</div>
+                    <div class="stat-mini-lbl">Late Arrivals</div>
+                  </div>
+                </div>
+
+                <div class="attendance-progress-container">
+                  <div class="progress-labels">
+                    <span>Overall Attendance Standing</span>
+                    <span id="profileProgressPct" class="font-bold text-success">0%</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="profileProgressBar" style="width: 0%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: STAFF DASHBOARD                      -->
+        <!-- ========================================== -->
+        <section id="view-staff-dashboard" class="view-section">
+          <!-- Active Timetable Session Banner for Staff -->
+          <div class="active-session-banner staff-banner">
+            <div class="banner-left">
+              <div class="banner-badge">👨‍🏫</div>
+              <div class="banner-info">
+                <h3 id="staffBannerSubjectName">Checking Current Class Session...</h3>
+                <div class="banner-meta">
+                  <span id="staffBannerDeptYear">Department: --</span>
+                  <span id="staffBannerSlot">Time Slot: --</span>
+                  <span id="staffBannerRoom">Classroom: --</span>
+                  <span id="staffBannerStatus" class="badge badge-success">ACTIVE</span>
+                </div>
+              </div>
+            </div>
+            <!-- Staff Live Clock Card -->
+            <div class="live-clock-card" id="staffLiveClockCard">
+              <div class="clock-label">CAMPUS MASTER CLOCK</div>
+              <div class="clock-value live-clock-text" id="staffClockVal">Loading clock...</div>
+              <div class="clock-sub"><span class="pulse-dot"></span> Authoritative Server Clock</div>
+            </div>
+            <div class="banner-right-action">
+              <button class="btn btn-warning" id="btnStaffActivateSlot">⚡ Activate Session</button>
+              <button class="btn btn-primary" id="btnStaffGoToLive">Live Terminal 📹</button>
+            </div>
+          </div>
+
+          <!-- Staff Statistics Bar (11) -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon primary">👥</div>
+              <div>
+                <div class="stat-value" id="staffStatTotalStudents">0</div>
+                <div class="stat-label">Total Students</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon success">✅</div>
+              <div>
+                <div class="stat-value text-success" id="staffStatPresent">0</div>
+                <div class="stat-label">Present</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon danger">❌</div>
+              <div>
+                <div class="stat-value text-danger" id="staffStatAbsent">0</div>
+                <div class="stat-label">Absent</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon warning">⏱️</div>
+              <div>
+                <div class="stat-value text-warning" id="staffStatLate">0</div>
+                <div class="stat-label">Late</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon info">📈</div>
+              <div>
+                <div class="stat-value text-info" id="staffStatPercentage">0%</div>
+                <div class="stat-label">Attendance Rate</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Attendance Table (B & 8: STUDENT PHOTO COMPARISON / STAFF VIEW) -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3>Live Attendance Ledger</h3>
+                <p class="panel-subtitle">Automatically updates with registered photos when students are verified.</p>
+              </div>
+              <div class="panel-actions">
+                <span class="live-pulse-badge"><span class="pulse-dot"></span> Live Sync Active (3s)</span>
+                <button class="btn btn-sm btn-secondary" id="btnRefreshStaffLive">Sync Now 🔄</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Photo</th>
+                    <th>Roll No</th>
+                    <th>Student Name</th>
+                    <th>Entry Time</th>
+                    <th>Similarity</th>
+                    <th>Liveness</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="staffLiveAttendanceBody">
+                  <tr><td colspan="7" class="text-center py-4">Waiting for student recognitions...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Class Students List (12: STAFF STUDENT LIST) -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3>Class Students (Section Roster)</h3>
+                <p class="panel-subtitle">Visual overview of all enrolled students for the current session.</p>
+              </div>
+              <div class="panel-actions" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" class="form-control" id="staffStudentSearch" placeholder="Search name or roll no..." style="width: 220px;">
+                <button class="btn btn-primary btn-sm" id="btnStaffAddNewStudent">➕ Add New Student</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Photo</th>
+                    <th>Roll Number</th>
+                    <th>Student Name</th>
+                    <th>Class / Section</th>
+                    <th>Entry Time</th>
+                    <th>Recognition Status</th>
+                    <th>Attendance</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="staffClassStudentsBody">
+                  <tr><td colspan="7" class="text-center py-4">Loading class student roster...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: DASHBOARD                          -->
+        <!-- ========================================== -->
+        <section id="view-dashboard" class="view-section active">
+          <!-- Active Timetable Session Banner -->
+          <div class="active-session-banner" id="dashboardBanner">
+            <div class="banner-left">
+              <div class="banner-badge">⏱️</div>
+              <div class="banner-info">
+                <h3 id="bannerSubjectName">No Active Timetable Session</h3>
+                <div class="banner-meta">
+                  <span id="bannerDeptYear">Department: N/A</span>
+                  <span id="bannerSlot">Time Slot: N/A</span>
+                  <span id="bannerStatus">Status: UPCOMING</span>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="btnGoToLive">Launch Live Terminal 📹</button>
+          </div>
+
+          <!-- Statistical Metrics Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon primary">👥</div>
+              <div>
+                <div class="stat-value" id="statTotalStudents">0</div>
+                <div class="stat-label">Total Registered Students</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon success">✅</div>
+              <div>
+                <div class="stat-value" id="statTodayPresent">0</div>
+                <div class="stat-label">Present Today</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon danger">❌</div>
+              <div>
+                <div class="stat-value" id="statTodayAbsent">0</div>
+                <div class="stat-label">Absent Today</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon cyan">📈</div>
+              <div>
+                <div class="stat-value" id="statAttendancePct">0%</div>
+                <div class="stat-label">Attendance Rate</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Recognition Stream Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2><span>⚡</span> Real-Time Recognition Stream (Today)</h2>
+              <button class="btn btn-outline btn-sm" id="btnRefreshDashboard">Refresh</button>
+            </div>
+            <div class="table-responsive">
+              <table class="custom-table" id="dashboardFeedTable">
+                <thead>
+                  <tr>
+                    <th>Roll / Reg ID</th>
+                    <th>Student Name</th>
+                    <th>Department</th>
+                    <th>Last Seen Time</th>
+                    <th>Similarity</th>
+                    <th>Liveness</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardFeedBody">
+                  <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Waiting for facial detections...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: LIVE ATTENDANCE TERMINAL           -->
+        <!-- ========================================== -->
+        <section id="view-live" class="view-section">
+          <div class="live-camera-layout">
+            <!-- Camera & AI Canvas Overlay -->
+            <div class="camera-feed-box">
+              <div class="camera-hud">
+                <div class="hud-badge"><span class="status-dot"></span> REAL-TIME AI INFERENCE</div>
+                <div class="hud-badge hud-rec" id="liveFpsBadge">FPS: --</div>
+              </div>
+              <video id="webcamVideo" autoplay playsinline muted></video>
+              <canvas id="cameraOverlay"></canvas>
+              <div class="camera-controls">
+                <button class="btn btn-success" id="btnStartCamera">Start Camera</button>
+                <button class="btn btn-danger" id="btnStopCamera" style="display:none;">Stop Camera</button>
+              </div>
+            </div>
+
+            <!-- Active Session Details & Live Attendance List -->
+            <div class="card" style="display: flex; flex-direction: column;">
+              <div class="card-header">
+                <div>
+                  <h2 id="liveSessionTitle">Session: Detecting...</h2>
+                  <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="liveSessionSubtitle">Timetable Session</p>
+                </div>
+                <span class="badge badge-present" id="liveSessionBadge">ACTIVE</span>
+              </div>
+
+              <div class="table-responsive" style="flex: 1; max-height: 440px;">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>First Seen</th>
+                      <th>Last Seen</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="liveAttendanceTableBody">
+                    <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Start camera to take attendance</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: STUDENT FACE ENROLLMENT WIZARD     -->
+        <!-- ========================================== -->
+        <section id="view-enroll" class="view-section">
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+              <h2><span>👤➕</span> Multi-Angle Student Enrollment</h2>
+              <span class="badge badge-present">5 Angles Required</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+              Register student details and capture 5 high-quality face samples (Front, Left, Right, Up, Down).
+              Samples are verified by Face Quality Assessment (FQA) to ensure robustness against appearance changes (beard, hairstyle, glasses).
+            </p>
+
+            <form id="enrollStudentForm" class="form-grid">
+              <div class="form-group">
+                <label>Student Roll / ID *</label>
+                <input type="text" class="form-control" id="enrollStudentId" placeholder="e.g. 21AD006" required>
+              </div>
+              <div class="form-group">
+                <label>Student Full Name *</label>
+                <input type="text" class="form-control" id="enrollName" placeholder="e.g. Ananya Ramesh" required>
+              </div>
+              <div class="form-group">
+                <label>Department *</label>
+                <select class="form-control" id="enrollDept" required>
+                  <option value="AI&DS">AI&DS</option>
+                  <option value="CSE">CSE</option>
+                  <option value="ECE">ECE</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Year *</label>
+                <select class="form-control" id="enrollYear" required>
+                  <option value="I">I Year</option>
+                  <option value="II">II Year</option>
+                  <option value="III">III Year</option>
+                  <option value="IV" selected>IV Year</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Section *</label>
+                <select class="form-control" id="enrollSection" required>
+                  <option value="A" selected>Section A</option>
+                  <option value="B">Section B</option>
+                  <option value="C">Section C</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" class="form-control" id="enrollEmail" placeholder="student@college.edu">
+              </div>
+            </form>
+          </div>
+
+          <!-- Mode Switcher Tabs -->
+          <div class="enrollment-mode-tabs" style="margin-bottom: 20px;">
+            <button class="enroll-tab-btn active" id="tabLiveScan" type="button">
+              <span>📹</span> Live WebCam Scan
+            </button>
+            <button class="enroll-tab-btn" id="tabFileUpload" type="button">
+              <span>📁</span> Upload from Files
+            </button>
+          </div>
+
+          <!-- PANEL A: LIVE WEBCAM SCAN -->
+          <div class="card" id="panelLiveScan">
+            <div class="card-header">
+              <h2><span>📸</span> Live WebCam Angle Capture Studio</h2>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="btn btn-outline btn-sm" id="btnToggleEnrollCamera">Turn On Camera 🎥</button>
+                <button class="btn btn-primary btn-sm" id="btnCaptureCurrentAngle">Capture Active Angle 📷</button>
+                <button class="btn btn-success btn-sm" id="btnSubmitEnrollment">Save & Enroll Biometrics 💾</button>
+              </div>
+            </div>
+
+            <!-- Live Camera Box with Visual Guide Ring -->
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;">
+              <div class="camera-feed-box" style="min-height: 380px; position: relative;">
+                <video id="enrollWebcamVideo" autoplay playsinline muted></video>
+                <canvas id="enrollCanvas" style="display:none;"></canvas>
+                <!-- Interactive Pose Guide Ring Overlay -->
+                <canvas id="enrollOverlayCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+                
+                <div class="enroll-camera-overlay-hud">
+                  <div class="guide-ring-indicator" id="guideRingState">
+                    <span id="guideRingIcon">⏳</span>
+                    <span id="guideRingText">Turn On Camera</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Real-Time Pose & Quality Feedback -->
+              <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 22px; background: rgba(0,0,0,0.35); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                    <h4 style="font-size: 15px; font-weight:700;" id="enrollFeedbackTitle">1. Look Front</h4>
+                    <span class="badge badge-verifying" id="enrollHoldBadge">Hold Still: 0ms / 500ms</span>
+                  </div>
+                  <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;" id="enrollFeedbackDesc">
+                    Look directly into the camera. Hold steady for 500ms for automatic capture.
+                  </p>
+                  
+                  <div class="pose-metrics-card">
+                    <div class="pose-metric-item">
+                      <span>Face Orientation (Yaw):</span>
+                      <strong id="poseYawVal">0.0°</strong>
+                    </div>
+                    <div class="pose-metric-item">
+                      <span>Head Tilt (Pitch):</span>
+                      <strong id="posePitchVal">0.0°</strong>
+                    </div>
+                    <div class="pose-metric-item">
+                      <span>Image Sharpness:</span>
+                      <strong id="poseSharpVal">--</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="font-size: 11.5px; color: var(--accent-cyan); padding: 10px 12px; background: rgba(6,182,212,0.1); border-radius: var(--radius-sm); border: 1px solid rgba(6,182,212,0.25);" id="enrollFqaStatus">
+                  Guidance: Center your face inside the guide ring.
+                </div>
+              </div>
+            </div>
+
+            <!-- 5 Angle Cards with Intuitive Directives -->
+            <div class="enroll-angle-cards" style="margin-top: 20px;">
+              <div class="angle-card active" data-angle="front" id="cardAngleFront">
+                <div class="angle-icon">😐</div>
+                <h4>Look Front</h4>
+                <p>Natural expression</p>
+                <div class="quality-meter"><div class="quality-fill" id="fillFront"></div></div>
+              </div>
+              <div class="angle-card" data-angle="slight_left" id="cardAngleLeft">
+                <div class="angle-icon">👈</div>
+                <h4>Turn Left</h4>
+                <p>Glance toward left</p>
+                <div class="quality-meter"><div class="quality-fill" id="fillLeft"></div></div>
+              </div>
+              <div class="angle-card" data-angle="slight_right" id="cardAngleRight">
+                <div class="angle-icon">👉</div>
+                <h4>Turn Right</h4>
+                <p>Glance toward right</p>
+                <div class="quality-meter"><div class="quality-fill" id="fillRight"></div></div>
+              </div>
+              <div class="angle-card" data-angle="slight_up" id="cardAngleUp">
+                <div class="angle-icon">👆</div>
+                <h4>Look Up</h4>
+                <p>Tilt chin upward</p>
+                <div class="quality-meter"><div class="quality-fill" id="fillUp"></div></div>
+              </div>
+              <div class="angle-card" data-angle="slight_down" id="cardAngleDown">
+                <div class="angle-icon">👇</div>
+                <h4>Look Down</h4>
+                <p>Tilt chin downward</p>
+                <div class="quality-meter"><div class="quality-fill" id="fillDown"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL B: UPLOAD FROM FILES -->
+          <div class="card" id="panelFileUpload" style="display: none;">
+            <div class="card-header">
+              <h2><span>📁</span> Upload Photo & Multi-Embedding Extraction</h2>
+              <span class="badge badge-present">Single Photo Auto-Augmentation</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+              Upload a clear student portrait image (JPG, JPEG, or PNG).
+              The system validates single-face presence and sharpness (Laplacian variance > 100),
+              then generates calibrated multi-angle variations to store 5 deep embeddings.
+            </p>
+
+            <div class="file-dropzone" id="fileDropzone">
+              <input type="file" id="fileInput" accept=".jpg,.jpeg,.png" style="display: none;">
+              <div class="dropzone-content" id="dropzonePrompt">
+                <div class="dropzone-icon">📥</div>
+                <h3>Drag & Drop Student Photo Here</h3>
+                <p>or <span style="color: var(--primary); text-decoration: underline; cursor: pointer;">browse files</span> from your computer</p>
+                <small style="color: var(--text-subtle);">Supported formats: JPG, JPEG, PNG (Max 10MB)</small>
+              </div>
+
+              <!-- Upload Preview Container -->
+              <div class="dropzone-preview" id="dropzonePreview" style="display: none;">
+                <img id="uploadPreviewImg" src="" alt="Student Preview">
+                <div class="preview-info">
+                  <h4 id="previewFileName">student_photo.jpg</h4>
+                  <p id="previewFileSize">1.2 MB</p>
+                  <button class="btn btn-outline btn-sm" id="btnRemoveFile" type="button">Change File</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Action Button -->
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 14px;">
+              <button class="btn btn-success" id="btnUploadAndEnroll" type="button" disabled>
+                <span>🚀</span> Verify & Enroll Photo
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: STUDENT DIRECTORY                  -->
+        <!-- ========================================== -->
+        <section id="view-students" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <h2><span>👥</span> Registered Students & Biometric Gallery</h2>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" class="form-control" id="searchStudentDirectory" placeholder="Search student name or roll..." style="width: 220px;">
+                <select class="form-control" id="filterStudentDept" style="width: 140px;">
+                  <option value="">All Depts</option>
+                  <option value="AI&DS">AI&DS</option>
+                  <option value="CSE">CSE</option>
+                  <option value="ECE">ECE</option>
+                </select>
+                <button class="btn btn-primary btn-sm" id="btnDirectoryAddStudent">➕ Add New Student</button>
+                <button class="btn btn-outline btn-sm" id="btnRefreshStudents">Reload</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table" id="studentsTable">
+                <thead>
+                  <tr>
+                    <th>Photo</th>
+                    <th>Roll / Reg ID</th>
+                    <th>Student Name</th>
+                    <th>Department</th>
+                    <th>Year / Sec</th>
+                    <th>Email</th>
+                    <th>Face Samples</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                  <tr><td colspan="8" style="text-align: center;">Loading students...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: TIMETABLE MANAGEMENT               -->
+        <!-- ========================================== -->
+        <section id="view-timetable" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <h2><span>📅</span> Department Academic Timetable Matrix</h2>
+              <button class="btn btn-primary btn-sm" id="btnOpenAddSlotModal">Add Timetable Slot ➕</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+              Attendance sessions automatically trigger and conclude according to this schedule. No QR codes or manual check-ins needed.
+            </p>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Day</th>
+                    <th>Time Slot</th>
+                    <th>Department</th>
+                    <th>Yr/Sec</th>
+                    <th>Subject</th>
+                    <th>Faculty</th>
+                    <th>Classroom</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="timetableTableBody">
+                  <tr><td colspan="8" style="text-align: center;">Loading timetable...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 6: SUBJECTS & FACULTY                 -->
+        <!-- ========================================== -->
+        <section id="view-subjects" class="view-section">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div class="card">
+              <div class="card-header">
+                <h2><span>📚</span> Academic Subjects</h2>
+              </div>
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Subject Title</th>
+                    <th>Department</th>
+                  </tr>
+                </thead>
+                <tbody id="subjectsTableBody">
+                  <tr><td colspan="3" style="text-align: center;">Loading subjects...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h2><span>👨‍🏫</span> Faculty Members</h2>
+              </div>
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Faculty ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody id="facultyTableBody">
+                  <tr><td colspan="3" style="text-align: center;">Loading faculty...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 7: ATTENDANCE HISTORY & AUDITED EDITS -->
+        <!-- ========================================== -->
+        <section id="view-history" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <h2><span>📋</span> Attendance History Ledger & Staff Adjustments</h2>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline btn-sm" id="btnResetHistoryFilters">Reset Filters 🔄</button>
+              </div>
+            </div>
+
+            <!-- Multi-Filter Bar -->
+            <div class="history-filter-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; background: rgba(0,0,0,0.25); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+              <div class="form-group">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">From Date</label>
+                <input type="date" class="form-control" id="historyStartDate">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">To Date</label>
+                <input type="date" class="form-control" id="historyEndDate">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Department</label>
+                <select class="form-control" id="historyDeptFilter">
+                  <option value="">All Depts</option>
+                  <option value="AI&DS">AI&DS</option>
+                  <option value="CSE">CSE</option>
+                  <option value="ECE">ECE</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Year</label>
+                <select class="form-control" id="historyYearFilter">
+                  <option value="">All Years</option>
+                  <option value="I">I</option>
+                  <option value="II">II</option>
+                  <option value="III">III</option>
+                  <option value="IV">IV</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Section</label>
+                <select class="form-control" id="historySectionFilter">
+                  <option value="">All Sections</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Status</label>
+                <select class="form-control" id="historyStatusFilter">
+                  <option value="">All Statuses</option>
+                  <option value="PRESENT">PRESENT</option>
+                  <option value="LATE">LATE</option>
+                  <option value="ABSENT">ABSENT</option>
+                </select>
+              </div>
+              <div class="form-group" style="grid-column: span 2;">
+                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Search Student</label>
+                <input type="text" class="form-control" id="historySearchInput" placeholder="Name or Roll Number...">
+              </div>
+              <div class="form-group" style="display: flex; align-items: flex-end;">
+                <button class="btn btn-primary" id="btnFilterHistory" style="width: 100%;">Filter 🔍</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table" id="historyDataTable">
+                <thead>
+                  <tr>
+                    <th>Photo</th>
+                    <th>Roll / Reg ID</th>
+                    <th>Student Name</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Entry Time</th>
+                    <th>Status</th>
+                    <th>Source</th>
+                    <th>Audit / Reason</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                  <tr><td colspan="10" style="text-align: center;">Loading attendance records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 8: REPORTS & EXPORTS                  -->
+        <!-- ========================================== -->
+        <section id="view-reports" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <h2><span>📥</span> Institutional Attendance Report Exporter</h2>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">
+              Generate and download certified academic attendance records. Outputs include First Seen, Last Seen, and verification scores.
+            </p>
+
+            <div class="form-grid" style="margin-bottom: 28px;">
+              <div class="form-group">
+                <label>Filter Date</label>
+                <input type="date" class="form-control" id="reportDate">
+              </div>
+              <div class="form-group">
+                <label>Department</label>
+                <select class="form-control" id="reportDept">
+                  <option value="">All Departments</option>
+                  <option value="AI&DS">AI&DS</option>
+                  <option value="CSE">CSE</option>
+                  <option value="ECE">ECE</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <button class="btn btn-primary" id="btnExportCsv">
+                <span>📄</span> Export to CSV
+              </button>
+              <button class="btn btn-success" id="btnExportExcel">
+                <span>📊</span> Export to Excel (.xlsx)
+              </button>
+              <button class="btn btn-danger" id="btnExportPdf">
+                <span>📑</span> Export to PDF Report
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 9: ACADEMIC BENCHMARK EVALUATION      -->
+        <!-- ========================================== -->
+        <section id="view-benchmark" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <h2><span>🔬</span> Empirical Academic Evaluation: Baseline vs Proposed System</h2>
+              <button class="btn btn-primary btn-sm" id="btnRunBenchmark">Execute Live Benchmark ⚡</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted);">
+              Empirical evaluation based on the Base Paper / Reference architecture against the Proposed Enhanced System:
+              <br>• <strong>Baseline:</strong> Haar Cascade Face Detection → HOG 128-D Representation → KNN / Euclidean Distance
+              <br>• <strong>Proposed:</strong> RetinaFace/YuNet Detection → 5-Pt Affine Alignment → FQA → 512-D ArcFace → Cosine Similarity + Temporal Liveness
+            </p>
+
+            <div class="benchmark-grid" id="benchmarkResultsArea">
+              <!-- Baseline Card -->
+              <div class="benchmark-col baseline">
+                <h3 style="color: var(--warning); margin-bottom: 14px;">BASELINE: Haar + HOG 128-D + KNN</h3>
+                <div class="benchmark-stat-item"><span>Accuracy:</span><span class="val" id="baseAcc">--</span></div>
+                <div class="benchmark-stat-item"><span>Precision:</span><span class="val" id="basePrec">--</span></div>
+                <div class="benchmark-stat-item"><span>Recall:</span><span class="val" id="baseRec">--</span></div>
+                <div class="benchmark-stat-item"><span>F1-Score:</span><span class="val" id="baseF1">--</span></div>
+                <div class="benchmark-stat-item"><span>False Acceptance (FAR):</span><span class="val" id="baseFar">--</span></div>
+                <div class="benchmark-stat-item"><span>False Rejection (FRR):</span><span class="val" id="baseFrr">--</span></div>
+                <div class="benchmark-stat-item"><span>Latency / FPS:</span><span class="val" id="baseSpeed">--</span></div>
+              </div>
+
+              <!-- Proposed Card -->
+              <div class="benchmark-col proposed">
+                <h3 style="color: var(--success); margin-bottom: 14px;">PROPOSED: YuNet + Alignment + ArcFace + Temporal</h3>
+                <div class="benchmark-stat-item"><span>Accuracy:</span><span class="val" id="propAcc" style="color: var(--success);">--</span></div>
+                <div class="benchmark-stat-item"><span>Precision:</span><span class="val" id="propPrec">--</span></div>
+                <div class="benchmark-stat-item"><span>Recall:</span><span class="val" id="propRec">--</span></div>
+                <div class="benchmark-stat-item"><span>F1-Score:</span><span class="val" id="propF1">--</span></div>
+                <div class="benchmark-stat-item"><span>False Acceptance (FAR):</span><span class="val" id="propFar" style="color: var(--success);">--</span></div>
+                <div class="benchmark-stat-item"><span>False Rejection (FRR):</span><span class="val" id="propFrr">--</span></div>
+                <div class="benchmark-stat-item"><span>Latency / FPS:</span><span class="val" id="propSpeed">--</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 10: ADMIN AUDIT LOGS                  -->
+        <!-- ========================================== -->
+        <section id="view-audit" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <h2><span>🛡️</span> Administrative Audit Trail</h2>
+              <button class="btn btn-outline btn-sm" id="btnRefreshAudit">Refresh Logs</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">
+              Tamper-evident logs of administrative actions, manual attendance overrides, and student enrollment events.
+            </p>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Admin</th>
+                    <th>Action</th>
+                    <th>Target</th>
+                    <th>Old Value</th>
+                    <th>New Value</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody id="auditTableBody">
+                  <tr><td colspan="7" style="text-align: center;">Loading audit logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 11: SYSTEM SETTINGS                   -->
+        <!-- ========================================== -->
+        <section id="view-settings" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <h2><span>⚙️</span> Computer Vision & Recognition Parameters</h2>
+              <button class="btn btn-primary btn-sm" id="btnSaveSettings">Save Calibration</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">
+              Calibrate ArcFace similarity verification threshold, blur rejection limits, and temporal frames.
+            </p>
+
+            <form id="settingsForm" class="form-grid">
+              <div class="form-group">
+                <label>ArcFace Cosine Threshold (0.40 - 0.90)</label>
+                <input type="number" step="0.01" min="0.4" max="0.9" class="form-control" id="settingThreshold" value="0.65">
+                <small style="color:var(--text-subtle);">Higher = stricter identity verification.</small>
+              </div>
+              <div class="form-group">
+                <label>Blur / Sharpness Threshold (Variance)</label>
+                <input type="number" step="1" min="20" max="150" class="form-control" id="settingBlur" value="65">
+                <small style="color:var(--text-subtle);">Rejects blurry face captures.</small>
+              </div>
+              <div class="form-group">
+                <label>Minimum Face Size (Pixels)</label>
+                <input type="number" step="5" min="40" max="160" class="form-control" id="settingFaceSize" value="70">
+                <small style="color:var(--text-subtle);">Requires students to be within camera range.</small>
+              </div>
+              <div class="form-group">
+                <label>Consecutive Temporal Frames Required</label>
+                <input type="number" step="1" min="1" max="8" class="form-control" id="settingTemporalFrames" value="3">
+                <small style="color:var(--text-subtle);">Frames of continuous match before marking PRESENT.</small>
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: Add Timetable Slot -->
+  <div class="modal-overlay" id="modalAddSlot">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add Timetable Schedule Slot</h3>
+        <button class="modal-close" id="btnCloseAddSlotModal">✕</button>
+      </div>
+      <form id="formAddTimetableSlot">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Department</label>
+          <select class="form-control" id="slotDept" required>
+            <option value="AI&DS">AI&DS</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Year</label>
+            <select class="form-control" id="slotYear" required>
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV" selected>IV</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Section</label>
+            <select class="form-control" id="slotSection" required>
+              <option value="A" selected>A</option>
+              <option value="B">B</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Day of Week</label>
+          <select class="form-control" id="slotDay" required>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Start Time (HH:MM)</label>
+            <input type="time" class="form-control" id="slotStartTime" required>
+          </div>
+          <div class="form-group">
+            <label>End Time (HH:MM)</label>
+            <input type="time" class="form-control" id="slotEndTime" required>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Subject</label>
+          <select class="form-control" id="slotSubjectSelect" required></select>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label>Classroom / Lab</label>
+          <input type="text" class="form-control" id="slotClassroom" value="AI Lab 1" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Timetable Slot</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Role-Based Authentication Login -->
+  <div class="modal-overlay" id="modalLogin">
+    <div class="modal-card auth-modal-card">
+      <div class="modal-header">
+        <div>
+          <h3>Smart Attendance Portal</h3>
+          <p class="modal-subtitle">Sign in to your role-based academic dashboard</p>
+        </div>
+      </div>
+
+      <!-- Role Selection Tabs -->
+      <div class="auth-role-tabs">
+        <button type="button" class="auth-role-tab active" data-auth-role="student" id="tabRoleStudent">
+          <span class="role-tab-icon">🎓</span>
+          <span class="role-tab-text">Student</span>
+        </button>
+        <button type="button" class="auth-role-tab" data-auth-role="staff" id="tabRoleStaff">
+          <span class="role-tab-icon">👨‍🏫</span>
+          <span class="role-tab-text">Faculty</span>
+        </button>
+        <button type="button" class="auth-role-tab" data-auth-role="admin" id="tabRoleAdmin">
+          <span class="role-tab-icon">🛡️</span>
+          <span class="role-tab-text">Admin</span>
+        </button>
+      </div>
+
+      <!-- Demo Quick-Fill Bar -->
+      <div class="quick-credentials-bar" id="quickCredentialsNotice">
+        <span class="quick-tag">Test Login:</span>
+        <button type="button" class="btn-quick-fill" id="btnQuickFillStudent">A.Kannan (23AD015)</button>
+        <button type="button" class="btn-quick-fill" id="btnQuickFillStaff">Dr. Sundaram (FAC01)</button>
+        <button type="button" class="btn-quick-fill" id="btnQuickFillAdmin">Admin (admin)</button>
+      </div>
+
+      <form id="loginForm">
+        <input type="hidden" id="loginRole" value="student">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label id="loginUserLabel">Roll Number / Student ID</label>
+          <input type="text" class="form-control" id="loginUsername" placeholder="e.g. 23AD015" value="23AD015" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label>Password</label>
+          <input type="password" class="form-control" id="loginPassword" value="student123" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnLoginSubmit" style="width: 100%;">Sign In as Student</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add New Student (Staff & Admin) -->
+  <div class="modal-overlay" id="modalAddStudent">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <div>
+          <h3>➕ Enroll New Student</h3>
+          <p class="modal-subtitle">Register student record and capture biometric photo</p>
+        </div>
+        <button class="modal-close" id="btnCloseAddStudentModal">✕</button>
+      </div>
+
+      <form id="formAddStudentModal">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Student Roll Number / ID *</label>
+            <input type="text" class="form-control" id="modalStudentId" placeholder="e.g. 23AD020" required>
+          </div>
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" class="form-control" id="modalStudentName" placeholder="e.g. Priya Sharma" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Department *</label>
+            <select class="form-control" id="modalStudentDept" required>
+              <option value="AI&DS">AI&DS</option>
+              <option value="CSE">CSE</option>
+              <option value="ECE">ECE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Year *</label>
+            <select class="form-control" id="modalStudentYear" required>
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV" selected>IV</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Section *</label>
+            <select class="form-control" id="modalStudentSection" required>
+              <option value="A" selected>A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="form-control" id="modalStudentEmail" placeholder="student@college.edu">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" class="form-control" id="modalStudentPhone" placeholder="9876543210">
+          </div>
+        </div>
+
+        <!-- Biometric Input Options -->
+        <div style="margin-bottom: 16px;">
+          <label style="font-weight: 600; display: block; margin-bottom: 8px;">Biometric Photo Enrollment</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+            <button type="button" class="btn btn-outline btn-sm active" id="btnModalModeWebcam">Webcam Snap 📷</button>
+            <button type="button" class="btn btn-outline btn-sm" id="btnModalModeUpload">Upload File 📁</button>
+          </div>
+
+          <!-- Mode 1: Webcam Snap -->
+          <div id="modalWebcamSection" style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <video id="modalWebcamVideo" autoplay playsinline muted style="width: 160px; height: 120px; background: #000; border-radius: var(--radius-sm); object-fit: cover; display: none;"></video>
+              <canvas id="modalWebcamCanvas" style="display:none;"></canvas>
+              <img id="modalCapturedPreview" src="" alt="Captured Face" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; display: none; border: 2px solid var(--success);">
+              <div>
+                <button type="button" class="btn btn-outline btn-sm" id="btnModalStartCamera">Turn On Camera</button>
+                <button type="button" class="btn btn-success btn-sm" id="btnModalCapturePhoto" style="display:none;">Snap Photo 📸</button>
+                <div id="modalCameraNotice" style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Camera inactive. Click to turn on.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mode 2: File Upload -->
+          <div id="modalUploadSection" style="display: none; background: rgba(0,0,0,0.3); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+            <input type="file" id="modalFileInput" accept=".jpg,.jpeg,.png" class="form-control">
+            <small style="color: var(--text-muted); display: block; margin-top: 4px;">Portrait photo with face clearly visible (JPG, PNG).</small>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-outline" id="btnCancelAddStudent">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitAddStudent">Save & Enroll Biometrics 💾</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Attendance (Staff & Admin) -->
+  <div class="modal-overlay" id="modalEditAttendance">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <div>
+          <h3>✏️ Edit Attendance Record</h3>
+          <p class="modal-subtitle">Official staff adjustment with mandatory audit logging</p>
+        </div>
+        <button class="modal-close" id="btnCloseEditAttendanceModal">✕</button>
+      </div>
+
+      <form id="formEditAttendance">
+        <input type="hidden" id="editRecordId">
+        <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="color: var(--text-muted); font-size: 12px;">Student:</span>
+            <strong id="editStudentName">--</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="color: var(--text-muted); font-size: 12px;">Roll Number:</span>
+            <span class="font-mono font-bold" id="editStudentRoll">--</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted); font-size: 12px;">Current Status:</span>
+            <span class="badge" id="editCurrentStatusBadge">--</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>New Attendance Status *</label>
+          <select class="form-control" id="editNewStatus" required>
+            <option value="PRESENT">PRESENT</option>
+            <option value="LATE">LATE</option>
+            <option value="ABSENT">ABSENT</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Adjusted Entry Time (HH:MM:SS)</label>
+          <input type="text" class="form-control font-mono" id="editNewTime" placeholder="e.g. 09:05:00">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label>Reason for Modification * <span style="color: var(--danger);">(Mandatory for Audit Trail)</span></label>
+          <textarea class="form-control" id="editReason" rows="3" placeholder="Provide reason (e.g., Medical leave approved by HOD, biometric camera misread, official lab duty)..." required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-outline" id="btnCancelEditAttendance">Cancel</button>
+          <button type="submit" class="btn btn-success" id="btnConfirmEditAttendance">Confirm Attendance Update ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: View Student Details -->
+  <div class="modal-overlay" id="modalViewStudent">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3>Student Biometric Profile</h3>
+        <button class="modal-close" id="btnCloseViewStudentModal">✕</button>
+      </div>
+      <div style="text-align: center; margin-bottom: 18px;">
+        <img id="viewStudentPhoto" src="" alt="Student Photo" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 0 18px var(--primary-glow); margin: 0 auto 10px; background: #1e293b;">
+        <h3 id="viewStudentName" style="margin-bottom: 4px;">Student Name</h3>
+        <span class="badge badge-success" id="viewStudentStatusBadge">Enrolled & Active</span>
+      </div>
+      <div class="student-details-list" style="background: rgba(0,0,0,0.25); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+        <div class="detail-row"><span class="lbl">Roll Number:</span> <span class="val font-mono font-bold" id="viewStudentRoll">--</span></div>
+        <div class="detail-row"><span class="lbl">Department:</span> <span class="val" id="viewStudentDept">--</span></div>
+        <div class="detail-row"><span class="lbl">Class / Section:</span> <span class="val" id="viewStudentClass">--</span></div>
+        <div class="detail-row"><span class="lbl">Email:</span> <span class="val" id="viewStudentEmail">--</span></div>
+        <div class="detail-row"><span class="lbl">Phone:</span> <span class="val" id="viewStudentPhone">--</span></div>
+        <div class="detail-row"><span class="lbl">Face Samples:</span> <span class="val text-success font-bold" id="viewStudentSamples">--</span></div>
+      </div>
+      <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+        <button class="btn btn-primary" id="btnCloseViewStudentBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Student Information -->
+  <div class="modal-overlay" id="modalEditStudent">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>Edit Student Information</h3>
+        <button class="modal-close" id="btnCloseEditStudentModal">✕</button>
+      </div>
+      <form id="formEditStudent">
+        <input type="hidden" id="editStudentIdHidden">
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Full Name *</label>
+          <input type="text" class="form-control" id="editModalName" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Dept *</label>
+            <select class="form-control" id="editModalDept" required>
+              <option value="AI&DS">AI&DS</option>
+              <option value="CSE">CSE</option>
+              <option value="ECE">ECE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Year *</label>
+            <select class="form-control" id="editModalYear" required>
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Sec *</label>
+            <select class="form-control" id="editModalSection" required>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Email Address</label>
+          <input type="email" class="form-control" id="editModalEmail">
+        </div>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label>Phone Number</label>
+          <input type="tel" class="form-control" id="editModalPhone">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-outline" id="btnCancelEditStudent">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveEditStudent">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer"></div>
+
+  <!-- Application Logic -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
